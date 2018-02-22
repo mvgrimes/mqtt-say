@@ -1,0 +1,8 @@
+- better voices? festival/google tts
+- pause squeezeplayer
+
+- had to create /etc/asound.conf to avoid espeak errors like:
+  ALSA lib pcm.c:2501:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.modem
+  Might also need jackd (very poor voices, though)
+
+- festival has better voices, but takes 20s to create wav

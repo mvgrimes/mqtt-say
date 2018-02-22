@@ -1,0 +1,17 @@
+{
+  "name": "mqtt-say",
+  "version": "1.0.0",
+  "description": "Watches mqtt topic and plays mp3/TTS",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mark Grimes <mgrimes@cpan.org>",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^4.0.0",
+    "mqtt": "^2.14.0",
+    "play-sound": "^1.1.1"
+  }
+}

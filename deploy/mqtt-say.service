@@ -5,10 +5,10 @@ After=network-online.target
 [Service]
 User=nobody
 Group=nobody
-WorkingDirectory=/srv/apps/mqtt-say/client
+WorkingDirectory=/srv/apps/mqtt-say
 ; ExecStartPre=/usr/bin/sleep 30
 ; node-lts-carbon (v8.9.2)
-ExecStart=/usr/bin/node mqtt-say.js
+ExecStart=/usr/bin/node index.js
 ; ExecReload=/usr/bin/kill -HUP $MAINPID
 ; ExecStop=/usr/bin/kill -INT $MAINPID
 PrivateTmp=true

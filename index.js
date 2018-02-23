@@ -6,25 +6,29 @@ require('dotenv').config();
 
 const mqtt    = require('mqtt');
 const player  = require('play-sound')(opts={});
+const spawn   = require('child_process').spawn;
 
 const client = mqtt.connect(process.env.MQTT || 'mqtt://localhost');
 
 /**
- * The state of the garage, defaults to closed
- * Possible states : closed, opening, open, closing
+ * Listen for text announcements and ring notices
  */
 
 client.on('connect', () => {
-  console.log('connected. subscribing...');
-  client.subscribe('hass/callerid/say');
+  console.log('connected. subscribing to ring...');
+  client.subscribe('hass/mqtt-say/ring');
+  client.subscribe('hass/mqtt-say/message');
 
-  // Inform controllers that garage is connected
   // sendStateUpdate()
 });
 
 client.on('message', (topic, message) => {
   console.log('received message %s %s', topic, message);
-  handleMessage( message );
+  if( topic == 'hass/mqtt-say/ring' ){
+    handleRing( message );
+  } else {
+    handleMessage( message );
+  }
 });
 
 function sendStateUpdate () {
@@ -32,11 +36,25 @@ function sendStateUpdate () {
   // client.publish('garage/state', state)
 }
 
-function handleMessage (message) {
+function handleRing (message) {
   console.log('ring, ring...');
 
   ring(RING_COUNT);
-  // speak?
+}
+
+function handleMessage (message) {
+  console.log(`speak ${message}`);
+  speak( message );
+}
+
+function speak (message){
+  const tts = spawn( 'espeak', ['-a', '200', '-ven-us+f4', '-s', '170' ] );
+  // const tts = spawn( 'festival', ['--tts' ] );
+  tts.stdout.on('data', (data) => console.log(data.toString()));
+  tts.stderr.on('data', (data) => console.error(data.toString()));
+  tts.on('clone', (code) => console.log(`exiting with code ${code}`));
+  tts.stdin.write(message + "\n");
+  tts.stdin.end();
 }
 
 function ring (times=1){

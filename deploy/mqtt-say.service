@@ -4,7 +4,7 @@ After=network-online.target
 
 [Service]
 User=nobody
-Group=nobody
+Group=audio
 WorkingDirectory=/srv/apps/mqtt-say
 ; ExecStartPre=/usr/bin/sleep 30
 ; node-lts-carbon (v8.9.2)

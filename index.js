@@ -36,21 +36,35 @@ function sendStateUpdate () {
   // client.publish('garage/state', state)
 }
 
-function handleRing (message) {
+function handleRing (url) {
   console.log('ring, ring...');
 
-  ring(RING_COUNT);
+  if( url) {
+    ring(1)
+      .then(() => play(url))
+      .then(() => ring(1))
+      .then(() => play(url))
+      .catch((err) => console.log('error playing ring: ', err) );
+  } else {
+    ring(RING_COUNT);
+  }
 }
 
-function handleMessage (message) {
-  console.log(`speak ${message}`);
+function handleMessage (url) {
+  console.log(`play ${url}`);
   // speak( message );
-  play( message );
+
+  play(url)
+    .catch((err) => console.log('error playing message: ', err) );
 }
+
 
 function play (url) {
-  player.play(url, function(err){
-    if (err) console.log('error playing sound: ', err);
+  return new Promise((resolve, reject) => {
+    player.play(url, function(err){
+      if (err) reject(err);
+      resolve();
+    });
   });
 }
 
@@ -67,10 +81,9 @@ function speak (message){
 function ring (times=1){
   if( times<=0 ) return;
 
-  player.play(RING_FILE, function(err){
-    if (err) console.log('error playing sound: ', err);
-    ring( times-1 );
-  });
+  return play(RING_FILE)
+    .then(() => ring(times-1))
+    .catch(() => console.log('error playing sound: ', err));
 }
 
 /**

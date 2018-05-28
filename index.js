@@ -44,7 +44,14 @@ function handleRing (message) {
 
 function handleMessage (message) {
   console.log(`speak ${message}`);
-  speak( message );
+  // speak( message );
+  play( message );
+}
+
+function play (url) {
+  player.play(url, function(err){
+    if (err) console.log('error playing sound: ', err);
+  });
 }
 
 function speak (message){
